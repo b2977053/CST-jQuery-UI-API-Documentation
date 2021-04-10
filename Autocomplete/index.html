@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="us">
+
+<head>
+    <meta charset="utf-8">
+    <title>jQuery UI Example Page</title>
+    <link href="./css/jquery-ui.css" rel="stylesheet">
+    <style>
+    body {
+        font-family: "Trebuchet MS", sans-serif;
+        margin: 50px;
+    }
+
+    .demoHeaders {
+        margin-top: 2em;
+    }
+
+    #dialog-link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+
+    #dialog-link span.ui-icon {
+        margin: 0 5px 0 0;
+        position: absolute;
+        left: .2em;
+        top: 50%;
+        margin-top: -8px;
+    }
+
+    #icons {
+        margin: 0;
+        padding: 0;
+    }
+
+    #icons li {
+        margin: 2px;
+        position: relative;
+        padding: 4px 0;
+        cursor: pointer;
+        float: left;
+        list-style: none;
+    }
+
+    #icons span.ui-icon {
+        float: left;
+        margin: 0 4px;
+    }
+
+    .fakewindowcontain .ui-widget-overlay {
+        position: absolute;
+    }
+
+    select {
+        width: 200px;
+    }
+    </style>
+</head>
+
+<body>
+	
+    <!-- Autocomplete -->
+    <h2 class="demoHeaders">Autocomplete-1</h2>
+    <div>
+        <input id="autocomplete-1">
+    </div>
+    <h2 class="demoHeaders">Autocomplete-2</h2>
+    <div>
+        <input id="autocomplete-2">
+    </div>
+    <h2 class="demoHeaders">Autocomplete-3</h2>
+    <style>
+        .ui-autocomplete-category {
+            padding: 3px 1em 3px .4em;
+        }
+    </style>
+    <div>
+        <input id="autocomplete-3">
+    </div>
+
+
+    <script src="./js/jquery.js"></script>
+    <script src="./js/jquery-ui.js"></script>
+    <!-- autocomplete-1 -->
+    <script>
+        var items = [
+            "ActionScript","AppleScript","Asp","BASIC",
+            "C","C++","Clojure","COBOL",
+            "ColdFusion","Erlang","Fortran","Groovy",
+            "Haskell","Java","JavaScript","Lisp",
+            "Perl","PHP","Python","Ruby",
+            "Scala","Scheme"
+        ];
+        $("#autocomplete-1").autocomplete({
+            source: items
+        });
+
+    </script>
+
+    <!-- autocomplete-2 -->
+    <script>
+    var JSONItems = [
+        {label:"ActionScript",value:"actionscript"},{label:"AppleScript",value:"applescript"},{label:"Asp",value:"asp"},{label:"BASIC",value:"basic"},
+        {label:"C",value:"c"},{label:"C++",value:"c++"},{label:"Clojure",value:"clojure"},{label:"COBOL",value:"cobol"},
+        {label:"ColdFusion",value:"coldfusion"},{label:"Erlang",value:"erlang"},{label:"Fortran",value:"fortran"},{label:"Groovy",value:"groovy"},
+        {label:"Haskell",value:"haskell"},{label:"Java",value:"java"},{label:"JavaScript",value:"javascript"},{label:"Lisp",value:"lisp"},
+        {label:"Perl",value:"perl"},{label:"PHP",value:"php"},{label:"Python",value:"python"},{label:"Ruby",value:"ruby"},
+        {label:"Scala",value:"scala"},{label:"Scheme",value:"scheme"}
+    ];
+    var $autoCom2 = $("#autocomplete-2").autocomplete({
+        source: JSONItems
+    });
+    $autoCom2.autocomplete('instance')._renderItem = function( ul, item ) {
+        return $( "<li>" )
+            .attr( "data-value", item.value )
+            .append( item.label )
+            .appendTo( ul );
+    };
+    </script>
+
+    <!-- autocomplete-3 -->
+    <script>
+    $.widget("custom.autocompleteCategory", $.ui.autocomplete, {
+        _create: function() {
+            this._super();
+            this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
+        },
+        _renderMenu: function(ul, items) {
+            var that = this,
+                currentCategory = "";
+            $.each(items, function(index, item) {
+                var li;
+                if (item.category != currentCategory) { // 類別變更就進來
+                    // -- 判斷該類別名稱，是否與上一筆 label 不同
+                    if (items[index-1].label !== item.category) {
+                        ul.append("<li class='ui-autocomplete-category'>" + item.category + "</li>");
+                    }
+                    currentCategory = item.category;
+                }
+                li = that._renderItemData(ul, item);
+                if (item.category) {
+                    li.attr("aria-label", item.category + " : " + item.label);
+                    li.find('div').html('|- '+li.find('div').html())
+                }
+            });
+        }
+    });
+    var itemsCategory = [
+        { label: "Products", category: "" },
+        { label: "People", category: "" },
+        { label: "annhhx10", category: "Products" },
+        { label: "annk K12", category: "Products" },
+        { label: "annttop C13", category: "Products" },
+        { label: "anders andersson", category: "People" },
+        { label: "andreas andersson", category: "People" },
+        { label: "andreas johnson", category: "People" }
+    ];
+    var itemsCategory2 = [
+        { value:1, label: "Products", category: "" },
+        { value:2, label: "People", category: "" },
+        { value:3, label: "annhhx10", category: "Products" },
+        { value:4, label: "annk K12", category: "Products" },
+        { value:5, label: "annttop C13", category: "Products" },
+        { value:6, label: "anders andersson", category: "People" },
+        { value:7, label: "andreas andersson", category: "People" },
+        { value:8, label: "andreas johnson", category: "People" }
+    ];
+    var isInsertByValue = true;
+    var $autoCom3 = $("#autocomplete-3").autocompleteCategory({
+        source: isInsertByValue?itemsCategory2:itemsCategory
+    });
+    </script>
+
+</body>
+
+</html>
